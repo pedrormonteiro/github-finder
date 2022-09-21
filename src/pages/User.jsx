@@ -2,19 +2,24 @@ import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import GithubContext from '../context/github/GithubContext';
+import { fetchUserWithRepos } from '../context/github/GithubActions';
 
 import Spinner from '../components/layouts/Spinner';
 import RepoList from '../components/repos/RepoList';
 
 function User() {
-  const { fetchUser, user, loading, fetchRepos, repos } =
-    useContext(GithubContext);
+  const { user, loading, repos, dispatch } = useContext(GithubContext);
 
   const params = useParams();
   useEffect(() => {
-    fetchUser(params.login);
-    fetchRepos(params.login);
-  }, []);
+    dispatch({ type: 'SET_LOADING' });
+    const getUserData = async () => {
+      const userData = await fetchUserWithRepos(params.login);
+      dispatch({ type: 'GET_USER_AND_REPOS', payload: userData });
+    };
+
+    getUserData();
+  }, [dispatch, params.login]);
 
   const {
     name,
@@ -116,7 +121,7 @@ function User() {
             </div>
           </div>
         </div>
-        <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats">
+        <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats stats-vertical lg:stats-horizontal">
           <div className="stat">
             <div className="stat-figure text-secondary">
               <FaUsers className="text-3xl md:text-5xl" />
