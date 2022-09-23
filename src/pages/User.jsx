@@ -42,6 +42,8 @@ function User() {
     return <Spinner />;
   }
 
+  const websiteUrl = blog?.startsWith('http') ? blog : 'https://' + blog;
+
   return (
     <>
       <div className="w-full mx-auto lg:w-10/12">
@@ -94,12 +96,8 @@ function User() {
                 <div className="stat">
                   <div className="stat-title text-md">Website</div>
                   <div className="text-lg stat-value">
-                    <a
-                      href={`https://${blog}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {blog}
+                    <a href={websiteUrl} target="_blank" rel="noreferrer">
+                      {websiteUrl}
                     </a>
                   </div>
                 </div>
